@@ -17,14 +17,5 @@ $endDate = $startDate.AddMonths(3)
 $auditAppSecret = New-AzureADApplicationPasswordCredential -ObjectId $auditApp.ObjectId -CustomKeyIdentifier "FractureLabsAuditAppSecret" -StartDate $startDate -EndDate $endDate
 Write-Output "The app key is: $($auditAppSecret.Value)"
 
-
-# Create the audit app
-$appName = "FractureLabsAuditApp"
-
-if(!($auditApp = Get-AzADApplication -DisplayName $appName))
-{
-    $auditApp = New-AzADApplication -DisplayName $appName -IdentifierUris "http://$appName"
-}
-
 # Create a Service Principal for the app and provide Read access
 New-AzADServicePrincipal -ApplicationId $auditApp.ApplicationId -Role Reader
