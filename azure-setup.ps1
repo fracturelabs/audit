@@ -29,7 +29,8 @@ if(!($connected))
     exit 1
 }
 
-Write-Output "Connected to tenantId: $(Get-AzureADCurrentSessionInfo | Select-Object -ExpandProperty TenantId)"
+$tenantId = Get-AzureADCurrentSessionInfo | Select-Object -ExpandProperty TenantId
+Write-Output "Connected to tenantId: $tenantId"
 
 
 #
@@ -99,12 +100,15 @@ if(Get-AzureADUser -Filter "Mail eq '$auditorEmail'")
 }
 
 
-Write-Output "The app key is: $($auditAppSecret.Value)"
-
 Write-Output "You must do the following manually through the portal:"
 Write-Output "  1. Assign the Global Reader role to $auditorEmail"
 Write-Output "     > Subscription | IAM | Add Role Assignment"
 Write-Output "  2. Assign API permissions to $appName"
 Write-Output "     > App Registrations | $appName | API Permissions"
-Write-Output "     > Azure Service Management - user_impersonation (Delegated)"
-Write-Output "     > Microsoft Graph - Directory.ReadAll & User.Read (Delegated)"
+Write-Output "       > Azure Service Management - user_impersonation (Delegated)"
+Write-Output "       > Microsoft Graph - Directory.Read.All & User.Read.All (Delegated)"
+Write-Output "     > Grant admin consent for Default Directory"
+
+Write-Output "tenantId = $tenantId"
+Write-Output "AppId    = $($auditApp.AppId)"
+Write-Output "Secret   = $($auditAppSecret.Value)"
